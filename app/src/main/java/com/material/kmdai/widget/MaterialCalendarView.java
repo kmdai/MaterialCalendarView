@@ -70,6 +70,7 @@ public class MaterialCalendarView extends View {
     private float mStartX;
     private float mStartY;
     private int[][] mDate;
+    private OnDateSelect mOnDateSelect;
 
     public MaterialCalendarView(Context context) {
         super(context);
@@ -112,6 +113,15 @@ public class MaterialCalendarView extends View {
         mToday = new RectF();
         mDate = new int[5][7];
         initDate();
+    }
+
+    /**
+     * 日期点击坚挺
+     *
+     * @param onDateSelect
+     */
+    public void setOnDateSelect(OnDateSelect onDateSelect) {
+        mOnDateSelect = onDateSelect;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -193,8 +203,16 @@ public class MaterialCalendarView extends View {
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-//                mPressY=mPressX=-1;
-                System.out.println("mPressX---" + mPressX + "   mPressY---" + mPressY);
+                float x = event.getX();
+                float y = event.getY();
+                int pressX = (int) Math.ceil((x) / mHorizontalAV);
+                int pressY = (int) Math.ceil((y) / mVerticalAV);
+                if (pressX == mPressX && pressY == mPressY && mOnDateSelect != null) {
+//                    if(){
+//
+//                    }
+//                    mOnDateSelect.onDateSelect(mYear,mMonth,mPressX,);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 break;
@@ -252,5 +270,9 @@ public class MaterialCalendarView extends View {
     private int dip2px(float dpValue) {
         final float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+    interface OnDateSelect {
+        void onDateSelect(int year, int month, int day, int week);
     }
 }
